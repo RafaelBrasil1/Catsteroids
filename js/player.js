@@ -2,7 +2,7 @@ class Player {
     constructor({position,velocity,imageSrc}){
         this.pos = position;
         this.vel = velocity;
-        this.speed = 2;
+        this.speed = 3;
         this.img = new Image();
         this.img.src = imageSrc;
         this.rot = 0;

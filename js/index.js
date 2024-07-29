@@ -5,7 +5,13 @@ canvas.height = 768;
 let anima;
 
 let friction = .95;
-let rotation_speed = 0.05;
+let rotation_speed = 0.07;
+
+let projectile_radius = 5;
+let projectile_speed = 3.5;
+let multi_shot = 1;
+
+let projectiles = [];
 
 let keys = {
     w:
@@ -26,6 +32,8 @@ let player = new Player({
     imageSrc: "../assets/player.png"
 });
 
+
+
 function draw() {
     // background
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -35,8 +43,29 @@ function draw() {
     player.updt();
 
 
+    //shoot updt
+    for(let i = projectiles.length; i >= 0, i--;){
+        let current_projectile = projectiles[i];
+        current_projectile.updt();
 
-    player.speed = 3;
+        //delet from list
+        if(current_projectile.pos.x + current_projectile.radius < 0 ||
+            current_projectile.pos.x - current_projectile.radius > canvas.width ||
+            current_projectile.pos.y + current_projectile.radius < 0 ||
+            current_projectile.pos.y - current_projectile.radius > canvas.height)
+            {
+            projectiles.splice(i,1);
+        }
+    }
+
+
+
+
+
+
+
+
+
     // movement
     if (keys.w.pressed) {
         player.vel.x = Math.cos(player.rot) * player.speed;
@@ -99,6 +128,19 @@ document.addEventListener('keydown', function (event) {
         case "KeyW": keys.w.pressed = true;
             break;
 
+        case "Space":
+
+            for (i = 1; i < multi_shot +1; i++) {
+            projectiles.push(new Projectile({
+                position: {x: player.pos.x + Math.cos(player.rot + (i-1)/10) * 55  ,   y: player.pos.y + Math.sin(player.rot + (i - 1)/10 ) * 55},
+                velocity: {x: Math.cos(player.rot) * projectile_speed, y: Math.sin(player.rot) * projectile_speed},
+                radius: projectile_radius
+            }))
+        }
+
+            player.img.src = "../assets/player2.png";
+            break;
+
 
     }
 
@@ -115,6 +157,9 @@ document.addEventListener('keyup', function (event) {
 
         case "KeyW": keys.w.pressed = false;
             break;
+
+
+        case "Space": player.img.src = "../assets/player.png";
 
 
     }
