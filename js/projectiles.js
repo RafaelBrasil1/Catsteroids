@@ -1,8 +1,10 @@
 class Projectile {
-    constructor({ position, velocity, radius }) {
+    constructor({ position, velocity, radius, damage}) {
         this.pos = position;
         this.vel = velocity;
         this.radius = radius;
+        this.dmg = damage;
+        this.vida = this.dmg;
 
     }
 

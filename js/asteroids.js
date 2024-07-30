@@ -2,7 +2,9 @@ class Asteroid {
     constructor({ position, velocity, radius}) {
         this.pos = position;
         this.vel = velocity;
-        this.radius = radius
+        this.radius = radius;
+        this.maxRadius = radius;
+        this.killed = false;
     }
 
     draw() {

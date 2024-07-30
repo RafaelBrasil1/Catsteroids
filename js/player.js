@@ -6,6 +6,7 @@ class Player {
         this.img = new Image();
         this.img.src = imageSrc;
         this.rot = 0;
+        this.radius = 48;
     }
 
     draw(){
@@ -16,11 +17,17 @@ class Player {
         ctx.translate(-this.pos.x,-this.pos.y);
         ctx.drawImage(this.img, this.pos.x - 87, this.pos.y - 50, 140, 100);
 
-        // ctx.fillStyle = 'white';
-        // ctx.arc(this.pos.x, this.pos.y, 1, 0, 2 * Math.PI);
-        // ctx.fill();
+    
+
+      
 
         ctx.restore();
+
+        // ctx.beginPath();
+        // ctx.strokeRect(this.pos.x,this.pos.y,48,0)
+        // ctx.strokeStyle = 'red';
+        // ctx.stroke();
+        // ctx.closePath();
     }
 
     updt(){
