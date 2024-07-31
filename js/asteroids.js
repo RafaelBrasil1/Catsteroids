@@ -21,3 +21,10 @@ class Asteroid {
         this.pos.y += this.vel.y;
     }
 }
+
+
+
+let asteroid_spawn = 3000;
+let max_sz = 60;
+
+let asteroids = [];

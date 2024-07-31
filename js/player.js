@@ -36,3 +36,15 @@ class Player {
         this.pos.y += this.vel.y;
     }
 }
+
+
+
+let level = 1;
+let leveling = false;
+let healthRegen = 0;
+let exp_limit = 100;
+let exp = 0
+let exp_collect = 1;
+let max_life = 100;
+let life = max_life
+let hit_animation = 0;

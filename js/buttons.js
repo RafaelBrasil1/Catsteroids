@@ -49,5 +49,6 @@ class Button {
     }
 }
 
-let againbtn = new Button(300, 500, 250, 75, 'rgb(0,0,0)', 'rgba(255,255,255,1)', 'Again!', 50, 5, { x: 1.95, y: 1.3 });
+
+let retrybtn = new Button(300, 500, 250, 75, 'rgb(0,0,0)', 'rgba(255,255,255,1)', 'Retry!', 50, 5, { x: 1.95, y: 1.3 });
 let menubtn = new Button(650, 500, 250, 75, 'rgb(0,0,0)', 'rgba(255,255,255,1)', 'Menu', 50, 5, { x: 1.95, y: 1.3 });
