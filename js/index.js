@@ -9,6 +9,15 @@ let friction = .95;
 let rotation_speed = 0.07;
 let max_index = 9;
 
+let abilityE = {
+    unlocked: false,
+    helper: false,
+    duration: 40,
+    cooldown: 600,
+    timer: 0,
+    cooldown_timer:0
+}
+
 
 
 let keys = {
@@ -21,7 +30,9 @@ let keys = {
     d:
         { pressed: false },
 
-    space: { pressed: false }
+    space: { pressed: false },
+
+    e : {pressed: false}
 }
 
 // new player
@@ -149,6 +160,7 @@ function draw() {
             if (life < max_life) {
                 life += max_life / 100;
                 healthRegen = 100;
+
             }
         }
 
@@ -241,6 +253,48 @@ function draw() {
 
 
 
+        // E ability
+        if(abilityE.unlocked){
+
+if(keys.e.pressed == false){
+    abilityE.timer = abilityE.duration;
+    abilityE.cooldown_timer = abilityE.cooldown;
+}else{
+    if(abilityE.timer > 0){
+        for (i = 1; i < multi_shot + 1; i++) {
+            projectiles.push(new Projectile({
+                position: { x: player.pos.x + Math.cos(player.rot - (multi_shot / 20) + (i - 1) / 10) * 55, y: player.pos.y + Math.sin(player.rot - (multi_shot / 20) + (i - 1) / 10) * 55 },
+                velocity: { x: Math.cos(player.rot - (multi_shot / 20) + (i - 1) / 10) * projectile_speed, y: Math.sin(player.rot - (multi_shot / 20) + (i - 1) / 10) * projectile_speed },
+                radius: projectile_radius,
+                damage: max_dmg
+            }))
+        }
+        abilityE.timer -= 1;
+        
+    } else{
+        if(abilityE.cooldown_timer > 0){
+            abilityE.cooldown_timer --;
+        }else{
+            keys.e.pressed = false;
+        }
+    }
+
+}
+        
+        ctx.strokeStyle = 'white';
+        ctx.rect(25,550,100,100);
+
+        ctx.fillStyle = 'white';
+        ctx.font = '70px JOYSTIX';
+        ctx.fillText('E',45,625);
+        ctx.fillStyle = 'rgba(255,255,255,0.1'
+        ctx.fillRect(25,550,(abilityE.cooldown_timer/abilityE.cooldown) * 100,100);
+        ctx.stroke();
+
+        
+
+        }
+
 
 
 
@@ -290,6 +344,22 @@ function draw() {
         }
 
 
+
+
+        // game updt after lvl
+        if (exp >= exp_limit) {
+            exp -= exp_limit;
+            level += 1;
+            exp_limit += exp_limit / 10
+            max_sz += 4;
+            asteroid_spawn -= 85;
+            leveling = true;
+
+        }
+
+
+
+
         // UI
         ctx.beginPath();
 
@@ -301,16 +371,7 @@ function draw() {
 
         ctx.rect(150, 725, 1000, 20);
 
-        if (exp >= exp_limit) {
-            exp -= exp_limit;
-            level += 1;
-            exp_limit += exp_limit / 10
-            max_sz += 2;
-            asteroid_spawn -= 20;
-            leveling = true;
-
-        }
-
+ 
 
         // Life
         ctx.strokeStyle = 'white'
@@ -320,7 +381,7 @@ function draw() {
 
         ctx.fillStyle = 'white'
         ctx.font = "25px JOYSTIX"
-        ctx.fillText(`${life}/${max_life}`, 600, 700)
+        ctx.fillText(`${Math.floor(life)}/${Math.floor(max_life)}`, 600, 700)
 
 
         ctx.rect(100, 675, 1100, 30);
@@ -346,13 +407,16 @@ function draw() {
         card2.i = card.i
         while (card2.i == card.i) {
             card2.i = RandomInt(1, max_index);
-            console.log(card2.i);
+           
         }
 
         card3.i = card2.i
         while (card3.i == card2.i || card3.i == card.i) {
             card3.i = RandomInt(1, max_index);
         }
+
+     
+        
 
         card.vel.y = 0;
         card.pos.y = 150;
@@ -376,12 +440,9 @@ function draw() {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
         }
 
-        if (abilityE == true) {
+        if (abilityE.unlocked == true) {
             max_index = 10;
         }
-
-
-
 
 
         // card updt
@@ -395,7 +456,7 @@ function draw() {
             card.vel.y += -0.2;
             card2.vel.y += 0.2;
             card3.vel.y += 0.2;
-            console.log(card.vel.y);
+            
         }
 
         if (card2.selected == true) {
@@ -421,6 +482,9 @@ function draw() {
         if (card.vel.y < -17 || card.vel.y > 17) {
             leveling = false;
             paused = false;
+            if(abilityE.helper == true){
+                abilityE.unlocked = true;
+            }
         }
     }
 
@@ -511,14 +575,11 @@ document.addEventListener('keydown', function (event) {
             break;
 
 
-        case "KeyP": if (paused == false) {
-            paused = true;
-        }
-        else {
-            paused = false;
+        case "KeyE": if(abilityE.unlocked){
+            keys.e.pressed = true;
+    
         }
             break;
-
 
     }
 
@@ -550,6 +611,9 @@ document.addEventListener('keyup', function (event) {
             player.img.src = "../assets/player.png";
             break;
 
+       
+      
+
 
     }
 
@@ -580,6 +644,8 @@ document.addEventListener('click', function (event) {
         rotation_speed = 0.07;
         paused = false;
         leveling = false;
+        retrybtn.mouseOn = false;
+
 
     }
     if (menubtn.mouseOn) {
@@ -590,14 +656,20 @@ document.addEventListener('click', function (event) {
     if (card.selected == false && card2.selected == false && card3.selected == false) {
         if (card.mouseOn) {
             card.selected = true;
+            card.applying = true;
+            card.mouseOn = false;
         }
 
         if (card2.mouseOn) {
             card2.selected = true;
+            card2.applying = true;
+            card2.mouseOn = false;
         }
 
         if (card3.mouseOn) {
             card3.selected = true;
+            card3.applying = true;
+            card3.mouseOn = false;
         }
     }
 
