@@ -15,7 +15,7 @@ let abilityE = {
     duration: 40,
     cooldown: 600,
     timer: 0,
-    cooldown_timer:0
+    cooldown_timer: 0
 }
 
 
@@ -32,7 +32,7 @@ let keys = {
 
     space: { pressed: false },
 
-    e : {pressed: false}
+    e: { pressed: false }
 }
 
 // new player
@@ -254,44 +254,44 @@ function draw() {
 
 
         // E ability
-        if(abilityE.unlocked){
+        if (abilityE.unlocked) {
 
-if(keys.e.pressed == false){
-    abilityE.timer = abilityE.duration;
-    abilityE.cooldown_timer = abilityE.cooldown;
-}else{
-    if(abilityE.timer > 0){
-        for (i = 1; i < multi_shot + 1; i++) {
-            projectiles.push(new Projectile({
-                position: { x: player.pos.x + Math.cos(player.rot - (multi_shot / 20) + (i - 1) / 10) * 55, y: player.pos.y + Math.sin(player.rot - (multi_shot / 20) + (i - 1) / 10) * 55 },
-                velocity: { x: Math.cos(player.rot - (multi_shot / 20) + (i - 1) / 10) * projectile_speed, y: Math.sin(player.rot - (multi_shot / 20) + (i - 1) / 10) * projectile_speed },
-                radius: projectile_radius,
-                damage: max_dmg
-            }))
-        }
-        abilityE.timer -= 1;
-        
-    } else{
-        if(abilityE.cooldown_timer > 0){
-            abilityE.cooldown_timer --;
-        }else{
-            keys.e.pressed = false;
-        }
-    }
+            if (keys.e.pressed == false) {
+                abilityE.timer = abilityE.duration;
+                abilityE.cooldown_timer = abilityE.cooldown;
+            } else {
+                if (abilityE.timer > 0) {
+                    for (i = 1; i < multi_shot + 1; i++) {
+                        projectiles.push(new Projectile({
+                            position: { x: player.pos.x + Math.cos(player.rot - (multi_shot / 20) + (i - 1) / 10) * 55, y: player.pos.y + Math.sin(player.rot - (multi_shot / 20) + (i - 1) / 10) * 55 },
+                            velocity: { x: Math.cos(player.rot - (multi_shot / 20) + (i - 1) / 10) * projectile_speed, y: Math.sin(player.rot - (multi_shot / 20) + (i - 1) / 10) * projectile_speed },
+                            radius: projectile_radius,
+                            damage: max_dmg
+                        }))
+                    }
+                    abilityE.timer -= 1;
 
-}
-        
-        ctx.strokeStyle = 'white';
-        ctx.rect(25,550,100,100);
+                } else {
+                    if (abilityE.cooldown_timer > 0) {
+                        abilityE.cooldown_timer--;
+                    } else {
+                        keys.e.pressed = false;
+                    }
+                }
 
-        ctx.fillStyle = 'white';
-        ctx.font = '70px JOYSTIX';
-        ctx.fillText('E',45,625);
-        ctx.fillStyle = 'rgba(255,255,255,0.1'
-        ctx.fillRect(25,550,(abilityE.cooldown_timer/abilityE.cooldown) * 100,100);
-        ctx.stroke();
+            }
 
-        
+            ctx.strokeStyle = 'white';
+            ctx.rect(25, 550, 100, 100);
+
+            ctx.fillStyle = 'white';
+            ctx.font = '70px JOYSTIX';
+            ctx.fillText('E', 45, 625);
+            ctx.fillStyle = 'rgba(255,255,255,0.1'
+            ctx.fillRect(25, 550, (abilityE.cooldown_timer / abilityE.cooldown) * 100, 100);
+            ctx.stroke();
+
+
 
         }
 
@@ -371,7 +371,7 @@ if(keys.e.pressed == false){
 
         ctx.rect(150, 725, 1000, 20);
 
- 
+
 
         // Life
         ctx.strokeStyle = 'white'
@@ -407,7 +407,7 @@ if(keys.e.pressed == false){
         card2.i = card.i
         while (card2.i == card.i) {
             card2.i = RandomInt(1, max_index);
-           
+
         }
 
         card3.i = card2.i
@@ -415,8 +415,8 @@ if(keys.e.pressed == false){
             card3.i = RandomInt(1, max_index);
         }
 
-     
-        
+
+
 
         card.vel.y = 0;
         card.pos.y = 150;
@@ -456,7 +456,7 @@ if(keys.e.pressed == false){
             card.vel.y += -0.2;
             card2.vel.y += 0.2;
             card3.vel.y += 0.2;
-            
+
         }
 
         if (card2.selected == true) {
@@ -482,7 +482,7 @@ if(keys.e.pressed == false){
         if (card.vel.y < -17 || card.vel.y > 17) {
             leveling = false;
             paused = false;
-            if(abilityE.helper == true){
+            if (abilityE.helper == true) {
                 abilityE.unlocked = true;
             }
         }
@@ -575,9 +575,9 @@ document.addEventListener('keydown', function (event) {
             break;
 
 
-        case "KeyE": if(abilityE.unlocked){
+        case "KeyE": if (abilityE.unlocked) {
             keys.e.pressed = true;
-    
+
         }
             break;
 
@@ -611,8 +611,8 @@ document.addEventListener('keyup', function (event) {
             player.img.src = "../assets/player.png";
             break;
 
-       
-      
+
+
 
 
     }
@@ -645,6 +645,14 @@ document.addEventListener('click', function (event) {
         paused = false;
         leveling = false;
         retrybtn.mouseOn = false;
+        abilityE = {
+            unlocked: false,
+            helper: false,
+            duration: 40,
+            cooldown: 600,
+            timer: 0,
+            cooldown_timer: 0
+        }
 
 
     }
