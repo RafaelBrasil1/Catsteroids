@@ -8,6 +8,8 @@ let paused = false;
 let friction = .95;
 let rotation_speed = 0.07;
 let max_index = 9;
+let bossMode = false;
+let angle
 
 let abilityE = {
     unlocked: false,
@@ -46,7 +48,7 @@ let player = new Player({
 function SpawnAsteroid() {
     setTimeout(() => {
 
-        if (paused == false) {
+        if (paused == false && bossMode == false) {
             let index = RandomInt(1, 4);
             let x, y;
             let vel_angl, max_angl, min_angl;
@@ -122,19 +124,7 @@ function SpawnAsteroid() {
 
 
 
-let circleCollision = (circle1, circle2) => {
-    let xDiff = circle2.pos.x - circle1.pos.x;
-    let yDiff = circle2.pos.y - circle1.pos.y;
 
-    let diff = Math.sqrt((xDiff ** 2) + (yDiff ** 2))
-
-    if (diff <= circle1.radius + circle2.radius) {
-
-        return true;
-    }
-    return false;
-
-}
 
 
 
@@ -188,6 +178,13 @@ function draw() {
                 current_projectile.pos.y - current_projectile.radius > canvas.height) {
                 projectiles.splice(i, 1);
             }
+
+            if(circleCollision(current_projectile,boss)){
+                projectiles.splice(i,1);
+                boss.life -= max_dmg;
+
+            }
+
         }
 
 
@@ -249,6 +246,129 @@ function draw() {
 
             }
         }
+
+
+
+        // Boss
+        if(level % 5 == 0){
+
+        if(bossMode == false){
+            boss.nome = nomes[RandomInt(0,nomes.length)];
+        }
+
+        bossMode = true
+        boss.updt();
+        if(boss.life <= 500){
+        boss.radius = boss.life
+        }else{
+            boss.radius = 500;
+        }
+
+        if(boss.pos.x > canvas.width){
+            boss.vel.x = -5;
+        }else{
+            boss.vel.x = 0;
+        };
+
+        if(boss.life <= 0){
+            boss.life = 0;
+        }
+
+        // boss colision player
+        if(circleCollision(player,boss)){
+            life = 0;
+        }
+
+
+        // boss ataq
+        if(boss.cooldown <= 0){
+            angle = Math.atan2(boss.pos.y - player.pos.y,boss.pos.x - player.pos.x)
+            
+
+            bossprojectiles.push(new BossProjectile({
+                    position: {x: boss.pos.x + Math.cos(angle + Math.PI) * boss.radius, y: boss.pos.y + Math.sin(angle + Math.PI) * boss.radius },
+                    velocity: {x: Math.cos(angle + Math.PI) * boss.shoot_speed, y: Math.sin(angle + Math.PI) * boss.shoot_speed},
+                    radius: boss.shoot_sz,
+                    damage: boss.dmg
+               
+            }));
+
+
+            boss.cooldown = 100;
+
+          
+
+        }else{
+            
+            boss.cooldown -= 1;
+        }
+
+        // boss projectiles updt
+        for (let i = bossprojectiles.length; i >= 0, i--;){
+
+            let crrnt_bossprojectile = bossprojectiles[i];
+            if(boss.nome == "Gojo Satoru"){
+                crrnt_bossprojectile.color = 'purple';
+            }
+
+            crrnt_bossprojectile.updt();
+
+            // delet projectile from list 
+            if (crrnt_bossprojectile.pos.x + crrnt_bossprojectile.radius < 0 ||
+                crrnt_bossprojectile.pos.x - crrnt_bossprojectile.radius > canvas.width ||
+                crrnt_bossprojectile.pos.y + crrnt_bossprojectile.radius < 0 ||
+                crrnt_bossprojectile.pos.y - crrnt_bossprojectile.radius > canvas.height) {
+                bossprojectiles.splice(i, 1);
+            }
+
+            if(circleCollision(crrnt_bossprojectile,player)){
+                bossprojectiles.splice(i,1);
+                life -= boss.dmg;
+
+            }
+
+
+            
+            
+
+            
+        }
+
+        
+
+        if(boss.nome == "Gojo Satoru"){
+            boss.shoot_sz = 800;
+            boss.dmg = Infinity;
+
+        }
+
+
+
+    
+
+        //boss death
+
+        if(boss.life <= 20){
+            boss.life = 0;
+            bossMode = false;
+            boss.life = boss.newlife;
+            boss.newlife += (level+5) * 100;
+            boss.maxlife = boss.life;
+            boss.dmg += 15;
+            boss.shoot_speed += 1;
+            boss.shoot_sz += 2;
+            bossprojectiles = []; 
+            if(boss.life < 500){
+            boss.pos.x = canvas.width + boss.life;
+            }else{
+            boss.pos.x = canvas.width + 500;
+            }
+            level += 1;
+            leveling = true;
+        }
+
+        }
+
 
 
 
@@ -581,6 +701,8 @@ document.addEventListener('keydown', function (event) {
         }
             break;
 
+       
+
     }
 
 });
@@ -653,6 +775,17 @@ document.addEventListener('click', function (event) {
             timer: 0,
             cooldown_timer: 0
         }
+        bossMode = false
+        
+        boss = new Boss(
+    {
+        position: {x: canvas.width + Size,y:350},
+        velocity: {x: 0, y:0},
+        size: Size
+
+    }
+
+)
 
 
     }
