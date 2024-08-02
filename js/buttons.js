@@ -36,6 +36,7 @@ class Button {
         ctx.fillText(this.text, (this.x + this.width / this.adjust.x), this.y + this.height / this.adjust.y);
 
         if (isInsideButton({ x: this.x, y: this.y, width: this.width, height: this.height }) == true) {
+
             this.colorUsed = this.color2;
             this.mouseOn = true;
             this.txtColor = 'black';
@@ -48,6 +49,14 @@ class Button {
         }
     }
 }
+
+
+let playbtn = new Button(370, 220, 500, 100, 'rgb(0,0,0)', 'rgba(255,255,255,1)', 'Play!', 70, 5, { x: 1.90, y: 1.35 });
+let Controlsbtn = new Button(370, 420, 500, 100, 'rgb(0,0,0)', 'rgba(255,255,255,1)', 'Controls', 70, 5, { x: 1.90, y: 1.35 });
+let Creditsbtn = new Button(370, 620, 500, 100, 'rgb(0,0,0)', 'rgba(255,255,255,1)', 'Credits', 70, 5, { x: 1.90, y: 1.35 });
+let ctrlClose =  new Button(1120, 80, 75, 75, 'rgb(0,0,0)', 'rgba(255,255,255,1)', 'X', 70, 5, { x: 2, y: 1.23 });
+let creditsClose = new Button(1120, 80, 75, 75, 'rgb(0,0,0)', 'rgba(255,255,255,1)', 'X', 70, 5, { x: 2, y: 1.23 });
+
 
 
 let retrybtn = new Button(300, 500, 250, 75, 'rgb(0,0,0)', 'rgba(255,255,255,1)', 'Retry!', 50, 5, { x: 1.95, y: 1.3 });
