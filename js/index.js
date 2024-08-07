@@ -291,9 +291,11 @@ function draw() {
 
             // Boss
             if (level % 5 == 0) {
+                
 
                 if (bossMode == false) {
                     boss.nome = nomes[RandomInt(0, nomes.length)];
+                    
                 }
 
                 bossMode = true
@@ -685,6 +687,7 @@ function draw() {
     } // Menu 
 
     else {
+        ctx.save();
 
         // background
         ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -817,7 +820,7 @@ function draw() {
 
             creditsClose.desenha();
         }
-
+        ctx.restore();
     }
 
 

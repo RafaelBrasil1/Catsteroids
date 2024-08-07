@@ -126,7 +126,7 @@ let nomes = [
     "Lucca", "Isaac", "Bento", "Micah", "Tobias",
     "Fausto", "Luciam", "Kalu", "Rael", "Xande", 
     
-    "Sukuna","Gojo Satoru","Naruto","","Zé das Couves",
+    "Sukuna","Gojo Satoru","Naruto","Toji Fushiguro","Zé das Couves",
 
     "Dominic", "Enrico", "Benjamin", "Ben", "Kalel",
     "Maria Alice", "Cecília", "Maitê", "Liz", "Antonella",

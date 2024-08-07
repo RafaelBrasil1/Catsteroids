@@ -218,10 +218,10 @@ class Card {
                 //Health
                 case 2:
                 if(life == max_life){
-                    max_life += 10;
+                    max_life += 50;
                     life = max_life
                 }else{
-                    max_life += 10;
+                    max_life += 50;
                 }
                 
                     break;
