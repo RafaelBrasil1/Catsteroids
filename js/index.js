@@ -4,13 +4,20 @@ canvas.width = 1280;
 canvas.height = 768;
 let anima;
 
+let AUTOMATION_ON = false;
+
+
+
+
+
+let player;
 let paused = false;
 let friction = .95;
 let rotation_speed = 0.07;
 let max_index = 9;
 let bossMode = false;
 let angle
-let menu = true;
+let menu = AUTOMATION_ON === true ? false : true;
 let ctrl_screen = false;
 let credits_screen = false;
 let titleImg = new Image();
@@ -25,7 +32,7 @@ let menuShoot = new Projectile({
 })
 let menuShoot2 = new Projectile({
 
-    position: { x: 630, y:  270 + 48},
+    position: { x: 630, y: 270 + 48 },
     velocity: { x: 0, y: 7 },
     radius: 5,
     damage: 5
@@ -33,7 +40,7 @@ let menuShoot2 = new Projectile({
 
 let menuShoot3 = new Projectile({
 
-    position: { x: 630, y:  270 + 48},
+    position: { x: 630, y: 270 + 48 },
     velocity: { x: 0, y: 7 },
     radius: 5,
     damage: 5
@@ -41,7 +48,7 @@ let menuShoot3 = new Projectile({
 
 let menuShoot4 = new Projectile({
 
-    position: { x: 630, y:  270 - 48},
+    position: { x: 630, y: 270 - 48 },
     velocity: { x: 0, y: -7 },
     radius: 5,
     damage: 5
@@ -78,12 +85,103 @@ let keys = {
 }
 
 // new player
+if (menu) {
+    player = new Player({
+        position: { x: -100, y: 270 },
+        velocity: { x: 0, y: 0 },
+        imageSrc: "../assets/player.png"
+    });
+} else {
+    player = new Player({
+        position: { x: 630, y: 270 },
+        velocity: { x: 0, y: 0 },
+        imageSrc: "../assets/player.png"
+    });
+}
 
-let player = new Player({
-    position: { x: -100, y: 270 },
-    velocity: { x: 0, y: 0 },
-    imageSrc: "../assets/player.png"
-});
+
+
+// neural network
+let aiShootimer = 0;
+let nn;
+let num_Inputs = 3;
+let num_hidden = 50;
+let num_outputs = 1;
+let outputLimit = 0.25;
+let output_left = 0;
+let output_right = 1;
+let fire_rate = 1; //per second
+
+if (AUTOMATION_ON) {
+
+    nn = new NeuralNetwork({
+        numInputs: num_Inputs,
+        numHidden: num_hidden,
+        numOutput: num_outputs,
+
+    });
+
+
+    //training
+    let astX, astY, PlaAngl, PlaX, PlaY
+    for (let i = 0; i < 1000000; i++) {
+
+     
+
+
+        //asteroid pos
+        astX = Math.random() * (canvas.width + max_sz * 2) - max_sz;
+        astY = Math.random() * (canvas.height + max_sz * 2) - max_sz;
+
+        //player
+        PlaAngl = Math.random() * (Math.PI * 2)
+        PlaX = player.pos.x
+        PlaY = player.pos.y
+
+        //angle to asteroid
+        let angle = AngleToPoint(
+            {x:PlaX,
+            y: PlaY},
+            PlaAngl,
+            {x: astX,
+            y: astY}
+        )
+
+        //direction to turn
+
+        let direction = angle > Math.PI ? output_left : output_right
+
+        //train network
+
+
+        nn.Train(NormalizeInput(astX,astY,PlaAngl),[direction]);
+
+
+
+    }
+
+
+
+}
+
+
+
+
+let rotatePlayer = (right) =>{
+ let multiplier = right ? 1 : -1
+    player.rot += rotation_speed * multiplier;
+    console.log(player.rot);
+
+ 
+}
+
+
+asteroids.push(new Asteroid({
+    position: { x: 200, y: 100 },
+    velocity: { x: 1, y: 1 },
+    radius: 60
+}));
+
 
 function SpawnAsteroid() {
     setTimeout(() => {
@@ -168,9 +266,62 @@ function SpawnAsteroid() {
 
 
 
+
 function draw() {
     if (menu == false) {
         if (paused == false) {
+
+                //keep between 0 - 360
+
+                // if(player.rot < 0){
+                //     player.rot += (Math.PI * 2)
+                // }else if(player.rot >= (Math.PI*2)){
+                //     player.rot -= (Math.PI * 2)
+                // }
+
+
+            //automation
+            if (AUTOMATION_ON) {
+                let astX = asteroids[0].pos.x;
+                let astY = asteroids[0].pos.y;
+                let PlaAngl = player.rot;
+                let predict = nn.FeedForward(NormalizeInput(astX,astY,PlaAngl)).data[0][0]
+
+                //make turn
+                let dLeft = Math.abs(predict - output_left);
+                let dRight = Math.abs(predict - output_right);
+
+                if(dLeft < outputLimit){
+                    rotatePlayer(false);
+                } else if (dRight < outputLimit){
+                    rotatePlayer(true); 
+                }else{
+                    //stop rotating
+                    
+                }
+
+                if(aiShootimer == 0){
+                    aiShootimer = 20;       
+
+                    projectiles.push(new Projectile({
+                        position: { x: player.pos.x + Math.cos(player.rot) * 55, y: player.pos.y + Math.sin(player.rot) * 55 },
+                        velocity: { x: Math.cos(player.rot) * projectile_speed, y: Math.sin(player.rot) * projectile_speed },
+                        radius: projectile_radius,
+                        damage: max_dmg
+                    }))
+
+                }else{
+                    aiShootimer --;
+                }
+
+
+                console.log(aiShootimer)
+
+            }
+
+
+
+
             // background
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = 'black';
@@ -250,10 +401,10 @@ function draw() {
                 }
                 // player collision
                 if (circleCollision(crrnt_asteroid, player)) {
-                    life -= crrnt_asteroid.radius;
-                    crrnt_asteroid.radius = 0;
-                    hit_animation = 70;
-                    player.img.src = '../assets/player3.png';
+                    // life -= crrnt_asteroid.radius;
+                    // crrnt_asteroid.radius = 0;
+                    // hit_animation = 70;
+                    // player.img.src = '../assets/player3.png';
                 }
 
 
@@ -291,11 +442,11 @@ function draw() {
 
             // Boss
             if (level % 5 == 0) {
-                
+
 
                 if (bossMode == false) {
                     boss.nome = nomes[RandomInt(0, nomes.length)];
-                    
+
                 }
 
                 bossMode = true
@@ -476,11 +627,13 @@ function draw() {
 
             // rotate
             if (keys.a.pressed) {
-                player.rot -= rotation_speed;
+                rotatePlayer(false)
+                
             }
 
             if (keys.d.pressed) {
-                player.rot += rotation_speed;
+                rotatePlayer(true)
+                
             }
 
 
@@ -726,7 +879,7 @@ function draw() {
             player.updt();
 
             menuShoot.updt();
-            
+
 
             if (menuShoot.pos.x < 370) {
                 playbtn.desenha();
@@ -740,34 +893,34 @@ function draw() {
                     player.vel.x = 0;
                     if (player.rot < 1.57) {
                         player.rot += 0.05
-                    }else{
+                    } else {
                         menuShoot2.updt();
-                        
+
                     }
                 }
 
             }
 
-            if(menuShoot2.pos.y < 420){
+            if (menuShoot2.pos.y < 420) {
                 Controlsbtn.desenha();
-            }else{
+            } else {
                 menuShoot2.pos.x = 2000;
                 menuShoot2.vel.y = 0;
                 menuShoot3.updt();
             }
 
 
-            if(menuShoot3.pos.y < 620){
+            if (menuShoot3.pos.y < 620) {
                 Creditsbtn.desenha();
-            }else{
+            } else {
                 menuShoot3.pos.x = 2000;
                 menuShoot3.vel.y = 0;
-                if(player.rot < 1.575 * 3){
+                if (player.rot < 1.575 * 3) {
                     player.rot += 0.05
-                    
-                }else{
+
+                } else {
                     menuShoot4.updt();
-                    if(menuShoot4.pos.y < 200){
+                    if (menuShoot4.pos.y < 200) {
                         titleImg.src = '';
                         menuShoot4.pos.x = 2000;
                         menuShoot4.vel.y = 0;
@@ -832,29 +985,26 @@ function draw() {
 
 draw()
 
-SpawnAsteroid();
+// SpawnAsteroid();
 
 // eventlisteners
 
 document.addEventListener('keydown', function (event) {
+    if (AUTOMATION_ON) {
+        return
+    }
 
     switch (event.code) {
-        case "KeyA": keys.a.pressed = true;
-            break;
-
+        case "KeyA":
         case "ArrowLeft": keys.a.pressed = true;
             break;
 
-        case "KeyD": keys.d.pressed = true;
-            break;
-
+        case "KeyD":
         case "ArrowRight": keys.d.pressed = true;
             break;
 
 
-        case "KeyW": keys.w.pressed = true;
-            break;
-
+        case "KeyW":
         case "ArrowUp": keys.w.pressed = true;
             break;
 
@@ -895,6 +1045,9 @@ document.addEventListener('keydown', function (event) {
 });
 
 document.addEventListener('keyup', function (event) {
+    if (AUTOMATION_ON) {
+        return
+    }
     switch (event.code) {
         case "KeyA": keys.a.pressed = false;
             break;
@@ -930,6 +1083,9 @@ document.addEventListener('keyup', function (event) {
 
 
 document.addEventListener('click', function (event) {
+    if (AUTOMATION_ON) {
+        return
+    }
     if (retrybtn.mouseOn) {
 
         asteroid_spawn = 3000;
@@ -1032,3 +1188,17 @@ document.addEventListener('click', function (event) {
 
 
 });
+
+// //XOR
+// // 0 0 == 0
+// // 0 1 == 1
+// // 1 0 == 1
+// // 1 1 == 0
+// let input0 = RandomInt(0,1)
+// let input1 = RandomInt(0,1)
+// let output = input0 == input1 ? 0 : 1
+
+// console.log("0 0 ==" + nn.FeedForward([0, 0]).data)
+// console.log("1 0 ==" + nn.FeedForward([1, 0]).data)
+// console.log("0 1 ==" + nn.FeedForward([0, 1]).data)
+// console.log("1 1 ==" + nn.FeedForward([1, 1]).data)

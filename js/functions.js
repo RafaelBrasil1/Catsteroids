@@ -59,5 +59,29 @@ let yDiff = pos1.y - pos2.y;
 
 return Math.atan(yDiff / xDiff)
 }
+
+
+
+function Sigmoid(x, deriv = false){
+  if(deriv){
+    return x * (1 - x);
+  }
+  return 1 / (1 + Math.exp(-x));
+}
   
+
+function AngleToPoint(pos,bearing,target){
+  let angleToTarget = Math.atan2(-target.y + pos.y, target.x - pos.x)
+  let diff = bearing - angleToTarget
+  return (diff + Math.PI * 2) % (Math.PI * 2) 
+  
+}
+//make values between 0,1
+function NormalizeInput(astX,astY,plaAngl){
+let input = [];
+input[0] = (astX + max_sz) / (canvas.width + max_sz*2)
+input[1] = (astY + max_sz) / (canvas.height + max_sz*2)
+input[2] = Math.abs(plaAngl / (Math.PI * 2)) // gambiarra
+return input;
+}
   
