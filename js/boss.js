@@ -21,7 +21,9 @@ class Boss{
         ctx.save();
         ctx.beginPath()
         ctx.strokeStyle = 'red';
+        if(this.radius > 0){
         ctx.arc(this.pos.x, this.pos.y, this.radius, 0, 2 * Math.PI);
+        }
         ctx.stroke();
         ctx.closePath()
         ctx.restore();

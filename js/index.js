@@ -4,7 +4,7 @@ canvas.width = 1280;
 canvas.height = 768;
 let anima;
 
-let AUTOMATION_ON = false;
+let AUTOMATION_ON = true;
 
 
 
@@ -168,11 +168,11 @@ if (AUTOMATION_ON) {
 
 
 let rotatePlayer = (right) =>{
- let multiplier = right ? 1 : -1
+ let multiplier = right ? 1 : -1;
     player.rot += rotation_speed * multiplier;
     console.log(player.rot);
 
- 
+
 }
 
 
@@ -292,9 +292,9 @@ function draw() {
                 let dRight = Math.abs(predict - output_right);
 
                 if(dLeft < outputLimit){
-                    rotatePlayer(false);
+                    rotatePlayer(true);
                 } else if (dRight < outputLimit){
-                    rotatePlayer(true); 
+                    rotatePlayer(false); 
                 }else{
                     //stop rotating
                     
@@ -315,7 +315,7 @@ function draw() {
                 }
 
 
-                console.log(aiShootimer)
+
 
             }
 
@@ -441,7 +441,7 @@ function draw() {
 
 
             // Boss
-            if (level % 5 == 0) {
+            if (level % 5 == 0 && !AUTOMATION_ON) {
 
 
                 if (bossMode == false) {
@@ -668,7 +668,9 @@ function draw() {
                 exp_limit += exp_limit / 10
                 max_sz += 4;
                 asteroid_spawn -= 85;
+                if(!AUTOMATION_ON){
                 leveling = true;
+                }
 
             }
 
@@ -985,7 +987,7 @@ function draw() {
 
 draw()
 
-// SpawnAsteroid();
+SpawnAsteroid();
 
 // eventlisteners
 
