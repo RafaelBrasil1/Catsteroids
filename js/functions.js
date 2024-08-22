@@ -81,7 +81,7 @@ function NormalizeInput(astX,astY,plaAngl){
 let input = [];
 input[0] = (astX + max_sz) / (canvas.width + max_sz*2)
 input[1] = (astY + max_sz) / (canvas.height + max_sz*2)
-input[2] = Math.abs(plaAngl / (Math.PI * 2)) // gambiarra
+input[2] = plaAngl / (Math.PI * 2)
 return input;
 }
   

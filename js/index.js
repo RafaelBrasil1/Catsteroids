@@ -4,7 +4,7 @@ canvas.width = 1280;
 canvas.height = 768;
 let anima;
 
-let AUTOMATION_ON = true;
+let AUTOMATION_ON = false;
 
 
 
@@ -21,7 +21,7 @@ let menu = AUTOMATION_ON === true ? false : true;
 let ctrl_screen = false;
 let credits_screen = false;
 let titleImg = new Image();
-titleImg.src = "../assets/Title.png"
+titleImg.src = "./assets/Title.png"
 let played = false;
 let menuShoot = new Projectile({
 
@@ -89,13 +89,13 @@ if (menu) {
     player = new Player({
         position: { x: -100, y: 270 },
         velocity: { x: 0, y: 0 },
-        imageSrc: "../assets/player.png"
+        imageSrc: "./assets/player.png"
     });
 } else {
     player = new Player({
         position: { x: 630, y: 270 },
         velocity: { x: 0, y: 0 },
-        imageSrc: "../assets/player.png"
+        imageSrc: "./assets/player.png"
     });
 }
 
@@ -105,7 +105,7 @@ if (menu) {
 let aiShootimer = 0;
 let nn;
 let num_Inputs = 3;
-let num_hidden = 50;
+let num_hidden = 100;
 let num_outputs = 1;
 let outputLimit = 0.25;
 let output_left = 0;
@@ -124,10 +124,7 @@ if (AUTOMATION_ON) {
 
     //training
     let astX, astY, PlaAngl, PlaX, PlaY
-    for (let i = 0; i < 1000000; i++) {
-
-     
-
+    for (let i = 0; i < 2000000; i++) {
 
         //asteroid pos
         astX = Math.random() * (canvas.width + max_sz * 2) - max_sz;
@@ -271,21 +268,30 @@ function draw() {
     if (menu == false) {
         if (paused == false) {
 
-                //keep between 0 - 360
+                // keep between 0 - 360
 
-                // if(player.rot < 0){
-                //     player.rot += (Math.PI * 2)
-                // }else if(player.rot >= (Math.PI*2)){
-                //     player.rot -= (Math.PI * 2)
-                // }
+                if(player.rot < 0){
+                    player.rot += (Math.PI * 2)
+                }else if(player.rot >= (Math.PI*2)){
+                    player.rot -= (Math.PI * 2)
+                }
 
 
             //automation
             if (AUTOMATION_ON) {
-                let astX = asteroids[0].pos.x;
-                let astY = asteroids[0].pos.y;
-                let PlaAngl = player.rot;
+                let astX;
+                let asty;
+                if(asteroids.length > 0){
+                astX = asteroids[0].pos.x;
+                astY = asteroids[0].pos.y;
+                }else{
+                astX = 0;
+                astY = 0;
+                }
+                
+                let PlaAngl = Math.PI - player.rot;
                 let predict = nn.FeedForward(NormalizeInput(astX,astY,PlaAngl)).data[0][0]
+                
 
                 //make turn
                 let dLeft = Math.abs(predict - output_left);
@@ -313,8 +319,6 @@ function draw() {
                 }else{
                     aiShootimer --;
                 }
-
-
 
 
             }
@@ -348,7 +352,7 @@ function draw() {
             if (hit_animation > 0) {
                 hit_animation -= 1;
             } else {
-                player.img.src = '../assets/player.png'
+                player.img.src = './assets/player.png'
             }
 
 
@@ -373,7 +377,6 @@ function draw() {
                 if (circleCollision(current_projectile, boss)) {
                     projectiles.splice(i, 1);
                     boss.life -= max_dmg;
-
                 }
 
             }
@@ -401,10 +404,10 @@ function draw() {
                 }
                 // player collision
                 if (circleCollision(crrnt_asteroid, player)) {
-                    // life -= crrnt_asteroid.radius;
-                    // crrnt_asteroid.radius = 0;
-                    // hit_animation = 70;
-                    // player.img.src = '../assets/player3.png';
+                    life -= crrnt_asteroid.radius;
+                    crrnt_asteroid.radius = 0;
+                    hit_animation = 70;
+                    player.img.src = './assets/player3.png';
                 }
 
 
@@ -815,7 +818,7 @@ function draw() {
 
         if (life <= 0) {
 
-            player.img.src = '../assets/player3.png';
+            player.img.src = './assets/player3.png';
             player.updt();
             player.vel.x = 0;
             player.vel.y = 0;
@@ -1026,7 +1029,7 @@ document.addEventListener('keydown', function (event) {
 
                         shoot_timer = shoot_cd;
 
-                        player.img.src = "../assets/player2.png";
+                        player.img.src = "./assets/player2.png";
                     }
                 }
             }
@@ -1072,7 +1075,7 @@ document.addEventListener('keyup', function (event) {
 
 
         case "Space": keys.space.pressed = false;
-            player.img.src = "../assets/player.png";
+            player.img.src = "./assets/player.png";
             break;
 
 

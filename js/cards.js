@@ -40,7 +40,7 @@ class Card {
                 ctx.fillStyle = 'white';
                 ctx.font = '30px JOYSTIX'
                 ctx.fillText('Damage', this.pos.x + 83, this.pos.y + 70);
-                this.icon.src = '../assets/strenghUp.png'
+                this.icon.src = './assets/strenghUp.png'
                 ctx.drawImage(this.icon, this.pos.x + 95, this.pos.y + 104, 125, 125);
                 ctx.font = '15px JOYSTIX'
                 ctx.fillText('Increase the damage ', this.pos.x + 30, this.pos.y + 290)
@@ -73,7 +73,7 @@ class Card {
                 ctx.fillStyle = 'white';
                 ctx.font = '30px JOYSTIX'
                 ctx.fillText('Speed', this.pos.x + 90, this.pos.y + 70);
-                this.icon.src = '../assets/speedUp.png';
+                this.icon.src = './assets/speedUp.png';
                 ctx.drawImage(this.icon, this.pos.x + 95, this.pos.y + 104, 125, 125);
                 ctx.font = '15px JOYSTIX'
                 ctx.fillText('Increase the speed ', this.pos.x + 30, this.pos.y + 290)
@@ -86,7 +86,7 @@ class Card {
                 ctx.fillStyle = 'white';
                 ctx.font = '30px JOYSTIX'
                 ctx.fillText('Shoot Speed', this.pos.x + 24, this.pos.y + 70);
-                this.icon.src = '../assets/shootSpeedUp.png'
+                this.icon.src = './assets/shootSpeedUp.png'
                 ctx.drawImage(this.icon, this.pos.x + 95, this.pos.y + 104, 125, 125);
                 ctx.font = '15px JOYSTIX'
                 ctx.fillText('Increase the speed of', this.pos.x + 30, this.pos.y + 290)
@@ -100,7 +100,7 @@ class Card {
                 ctx.fillStyle = 'white';
                 ctx.font = '30px JOYSTIX'
                 ctx.fillText('Exp', this.pos.x + 125, this.pos.y + 70);
-                this.icon.src = '../assets/expUp.png'
+                this.icon.src = './assets/expUp.png'
                 ctx.drawImage(this.icon, this.pos.x + 95, this.pos.y + 94, 125, 125);
                 ctx.font = '15px JOYSTIX'
                 ctx.fillText('Increase the amount of ', this.pos.x + 30, this.pos.y + 290)
@@ -113,7 +113,7 @@ class Card {
                 ctx.fillStyle = 'white';
                 ctx.font = '30px JOYSTIX'
                 ctx.fillText('Recharge', this.pos.x + 60, this.pos.y + 70);
-                this.icon.src = '../assets/rechargeUp.png'
+                this.icon.src = './assets/rechargeUp.png'
                 ctx.drawImage(this.icon, this.pos.x + 95, this.pos.y + 104, 125, 125);
                 ctx.font = '15px JOYSTIX'
                 ctx.fillText('Decrease the time it', this.pos.x + 30, this.pos.y + 290);
@@ -127,7 +127,7 @@ class Card {
                 ctx.fillStyle = 'white';
                 ctx.font = '30px JOYSTIX'
                 ctx.fillText('Multishot', this.pos.x + 52, this.pos.y + 70);
-                this.icon.src = '../assets/multishotUp.png'
+                this.icon.src = './assets/multishotUp.png'
                 ctx.drawImage(this.icon, this.pos.x + 95, this.pos.y + 99, 125, 125);
                 ctx.font = '15px JOYSTIX'
                 ctx.fillText('shoot 1 more ', this.pos.x + 30, this.pos.y + 290)
@@ -142,7 +142,7 @@ class Card {
                 ctx.fillStyle = 'white';
                 ctx.font = '30px JOYSTIX'
                 ctx.fillText('Size', this.pos.x + 109, this.pos.y + 70);
-                this.icon.src = '../assets/shootSzUp.png'
+                this.icon.src = './assets/shootSzUp.png'
                 ctx.drawImage(this.icon, this.pos.x + 95, this.pos.y + 97, 125, 125);
                 ctx.font = '15px JOYSTIX'
                 ctx.fillText('Increase the size of', this.pos.x + 30, this.pos.y + 290)
@@ -166,7 +166,7 @@ class Card {
                     ctx.fillStyle = 'white';
                     ctx.font = '30px JOYSTIX';
                     ctx.fillText('Duration', this.pos.x + 63, this.pos.y + 70);
-                    this.icon.src = '../assets/durationUp.png';
+                    this.icon.src = './assets/durationUp.png';
                     ctx.drawImage(this.icon, this.pos.x + 95, this.pos.y + 104, 125, 125);
                     ctx.font = '15px JOYSTIX';
                     ctx.fillText('Increase the duration', this.pos.x + 30, this.pos.y + 290);
@@ -180,7 +180,7 @@ class Card {
                 ctx.fillStyle = 'white';
                 ctx.font = '30px JOYSTIX';
                 ctx.fillText('Cooldown', this.pos.x + 60, this.pos.y + 70);
-                this.icon.src = '../assets/cooldownUp.png';
+                this.icon.src = './assets/cooldownUp.png';
                 ctx.drawImage(this.icon, this.pos.x + 95, this.pos.y + 104, 125, 125);
                 ctx.font = '15px JOYSTIX';
                 ctx.fillText('Reduce the cooldown', this.pos.x + 30, this.pos.y + 290);
