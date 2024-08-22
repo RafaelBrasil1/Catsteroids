@@ -124,7 +124,7 @@ if (AUTOMATION_ON) {
 
     //training
     let astX, astY, PlaAngl, PlaX, PlaY
-    for (let i = 0; i < 2000000; i++) {
+    for (let i = 0; i < 1000000; i++) {
 
         //asteroid pos
         astX = Math.random() * (canvas.width + max_sz * 2) - max_sz;
@@ -404,10 +404,12 @@ function draw() {
                 }
                 // player collision
                 if (circleCollision(crrnt_asteroid, player)) {
+                    if(!AUTOMATION_ON){
                     life -= crrnt_asteroid.radius;
                     crrnt_asteroid.radius = 0;
                     hit_animation = 70;
                     player.img.src = './assets/player3.png';
+                    }
                 }
 
 
@@ -669,8 +671,12 @@ function draw() {
                 exp -= exp_limit;
                 level += 1;
                 exp_limit += exp_limit / 10
+                if(max_sz < 150){
                 max_sz += 4;
+                }
+                if(asteroid_spawn > 200){
                 asteroid_spawn -= 85;
+                }
                 if(!AUTOMATION_ON){
                 leveling = true;
                 }
