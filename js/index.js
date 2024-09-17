@@ -113,6 +113,7 @@ let fire_rate = 1; //per second
 
 setTimeout(() => {
 let h1 = document.querySelector("h1");
+console.log(h1);
 h1.remove();
 if (AUTOMATION_ON) {
 
