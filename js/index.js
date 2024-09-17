@@ -100,7 +100,6 @@ if (menu) {
 }
 
 
-
 // neural network
 let aiShootimer = 0;
 let nn;
@@ -112,6 +111,9 @@ let output_left = 0;
 let output_right = 1;
 let fire_rate = 1; //per second
 
+setTimeout(() => {
+let h1 = document.querySelector("h1");
+h1.remove();
 if (AUTOMATION_ON) {
 
     nn = new NeuralNetwork({
@@ -1200,6 +1202,8 @@ document.addEventListener('click', function (event) {
 
 });
 
+
+}, 0)
 // //XOR
 // // 0 0 == 0
 // // 0 1 == 1
