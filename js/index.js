@@ -4,7 +4,7 @@ canvas.width = 1280;
 canvas.height = 768;
 let anima;
 
-let AUTOMATION_ON = false;
+let AUTOMATION_ON = true;
 
 
 
